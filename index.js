@@ -1,4 +1,6 @@
 const TelegramApi = require('node-telegram-bot-api')
+const fs = require('fs')
+const path = require('path')
 const {gameOptions, againOptions} = require('./options')
 
 const token = '1652765564:AAEHOSGSH5qEKXSAduVlikEW3WAnesIKMAg'
@@ -22,11 +24,20 @@ const againGame = async (chatId) => {
     await bot.sendMessage(chatId, 'Попробуй отгадать', gameOptions)
 }
 
+const readAudio = async (chatId) => {
+    fs.readFile('./Audio/example.mp3', async (err, data) => {
+         bot.sendMessage(chatId, 'Держи')
+         bot.sendAudio(chatId, data)
+    }
+)}
+
 const start = ()=> {
     bot.setMyCommands([
         {command: '/start', description: 'Start Telegram Bot'},
         {command: '/info', description: 'Info User'},
         {command: '/game', description: 'Game Telegram Bot'},
+        {command: '/audio', description: 'Audio Telegram Bot'},
+        {command: '/location', description: 'Location Telegram Bot'},
         {command: '/stop', description: 'Stop Telegram Bot'}
     ])
     
@@ -43,6 +54,9 @@ const start = ()=> {
         }
         if (text === '/game'){
             return startGame(chatId)
+        }
+        if (text === '/audio'){
+            return readAudio(chatId)
         }
         if(text === '/stop'){
             await bot.sendSticker(chatId, 'https://tlgrm.ru/_/stickers/9a5/3d6/9a53d66b-53c8-3ccb-a3dd-75fa64c18322/8.webp')
