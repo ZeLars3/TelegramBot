@@ -2,6 +2,8 @@ const TelegramApi = require('node-telegram-bot-api')
 const fs = require('fs')
 const path = require('path')
 const {gameOptions, againOptions} = require('./options')
+const keyboardButtons = require('./keyboard-buttons')
+const keyboard = require('./keyboard')
 
 const token = '1652765564:AAEHOSGSH5qEKXSAduVlikEW3WAnesIKMAg'
 
@@ -44,13 +46,26 @@ const start = ()=> {
     bot.on('message', async (msg) => {
         const text = msg.text
         const chatId = msg.chat.id
+
+        switch (msg.text) {
+            case keyboardButtons.homepage.favourites:
+                break
+            case keyboardButtons.cars:
+                break
+        }
         
         if (text === '/start'){
-            await bot.sendMessage(chatId, 'Добро пожаловать к боту в гости, введи команды ниже, чтобы узнать, что я умею.')
-            return bot.sendSticker(chatId, 'https://tlgrm.ru/_/stickers/9a5/3d6/9a53d66b-53c8-3ccb-a3dd-75fa64c18322/192/37.webp')
+            await bot.sendMessage(chatId, 'Добро пожаловать к боту в гости.')
+            await bot.sendSticker(chatId, 'https://tlgrm.ru/_/stickers/df4/f95/df4f9509-d0dd-4275-bc09-0784a16344de/1.webp')
+
+            await bot.sendMessage(chatId, text, {
+                reply_markup: {
+                    keyboard: keyboard.homepage
+                }
+            })
         }
         if (text === '/info'){
-            return bot.sendMessage(chatId, `Вот, что я знаю о тебе: \n Имя: ${msg.from.first_name} \n Username: ${msg.from.username}`)
+            return bot.sendMessage(chatId, `В моей базе содеражится информация о каждом авто. ${msg.from.first_name}, просто введите интересующую тебя марку или конкретное авто, чтобы узнать о ней больше`)
         }
         if (text === '/game'){
             return startGame(chatId)
